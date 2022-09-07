@@ -1,13 +1,6 @@
-﻿#Notes
-#gzekentiklt1sto001 - Kentik storage account
-#Resource ID: /subscriptions/f702ccd9-3b69-4c2f-ac45-057d53de6f08/resourceGroups/gze-kentik-lt1-rgp-001/providers/Microsoft.Storage/storageAccounts/gzekentiklt1sto001
-#gze-kentik-lt1-rgp-001
-##GZ-NP-SHRAPP-91-MEM: f702ccd9-3b69-4c2f-ac45-057d53de6f08
-
-#variables
 #$ResourceGroupName = Read-Host "Please provide name of ResourgeGroup that will be used for saving the NSG logs"
-$KentikStorageAccountLogs = Read-Host "Storage account ID"
-$retentionperiod = Read-Host "Retention period number (probably 180 days)"
+$StorageAccountLogs = Read-Host "Storage account ID"
+$retentionperiod = Read-Host "Retention period number"
 
 #Login to the Azure Resource Management Account
 #Login-AzAccount
@@ -17,7 +10,7 @@ Register-AzResourceProvider -ProviderNamespace Microsoft.Insights
 
 
 #$subscriptions = Get-AzSubscription
-$subscription = @('GZ-LT-SHRAPP-99-CNSS')
+$subscription = @('sub')
 $subscription | Get-AzSubscription -SubscriptionName {$subscription} | Set-AzContext
 
 $subscriptionID = (Get-AzContext).Subscription.Id
@@ -25,7 +18,7 @@ $subscriptionName = (Get-AzContext).Subscription.Name
 
 
 #This should be grabbing the Network Watcher regions
-#$storageAccount = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $KentikStorageAccountLogs
+#$storageAccount = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountLogs
 $NetworkWatchers = Get-AzNetworkWatcher -ResourceGroupName NetworkWatcherRG
 
 foreach ($NW in $NetworkWatchers){
@@ -43,9 +36,6 @@ foreach ($NW in $NetworkWatchers){
             $temp = Set-AzNetworkWatcherConfigFlowLog -NetworkWatcher $NW -TargetResourceId $NSG.Id -EnableFlowLog $true -StorageAccountId $KentikStorageAccountLogs -EnableRetention $true -RetentionInDays $retentionperiod -FormatVersion 2
             $temp
             Write-Host "Diagnostics enabled for $($NSG.Name)"
-            
-           
-            #$array += $NSG.Name
             
             }
 
