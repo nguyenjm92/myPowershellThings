@@ -18,7 +18,7 @@ $subscriptionName = (Get-AzContext).Subscription.Name
 
 
 #This should be grabbing the Network Watcher regions
-#$storageAccount = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountLogs
+$storageAccount = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountLogs
 $NetworkWatchers = Get-AzNetworkWatcher -ResourceGroupName NetworkWatcherRG
 
 foreach ($NW in $NetworkWatchers){
@@ -33,7 +33,7 @@ foreach ($NW in $NetworkWatchers){
 
             foreach($NSG in $NSGs){
             Get-AzNetworkWatcherFlowLogStatus -NetworkWatcher $NW -TargetResourceId $NSG.id
-            $temp = Set-AzNetworkWatcherConfigFlowLog -NetworkWatcher $NW -TargetResourceId $NSG.Id -EnableFlowLog $true -StorageAccountId $KentikStorageAccountLogs -EnableRetention $true -RetentionInDays $retentionperiod -FormatVersion 2
+            $temp = Set-AzNetworkWatcherConfigFlowLog -NetworkWatcher $NW -TargetResourceId $NSG.Id -EnableFlowLog $true -StorageAccountId $StorageAccountLogs -EnableRetention $true -RetentionInDays $retentionperiod -FormatVersion 2
             $temp
             Write-Host "Diagnostics enabled for $($NSG.Name)"
             
